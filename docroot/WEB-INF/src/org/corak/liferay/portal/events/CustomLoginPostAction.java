@@ -55,7 +55,7 @@ public class CustomLoginPostAction extends Action {
 			
 			Long companyId = PortalUtil.getCompanyId(request);
 			
-			Role roleUser = RoleLocalServiceUtil.getRole(companyId, "User");
+			//Role roleUser = RoleLocalServiceUtil.getRole(companyId, "User");
 			
 			Role rolePowerUser = RoleLocalServiceUtil.getRole(companyId, "Power User");
 			
@@ -91,14 +91,19 @@ public class CustomLoginPostAction extends Action {
 					for(Group group : groups) {
 						debug("Community: " + group.getName() + ", friendlyUrl: "
 								+ group.getFriendlyURL());
-						if(group.getName().equals("Guest"))
-							break;
-						if(firstUserGroup == null)
+						//if(group.getName().equals("Guest")){
+							//lastPath = new LastPath(request.getContextPath(), "/web/guest/workflow");
+						//	break;
+						//}
+						//if(firstUserGroup == null)
 							firstUserGroup = group;
-							if(group.hasPrivateLayouts())
+							if(group.hasPrivateLayouts()&&(!group.getName().equals("Guest")))
 								lastPath = new LastPath(request.getContextPath(), PropsUtil.get(PropsKeys.LAYOUT_FRIENDLY_URL_PRIVATE_GROUP_SERVLET_MAPPING)+group.getFriendlyURL());
 							if(lastPath != null)
 								break;
+					}
+					if(firstUserGroup.getName().equals("Guest")){
+						lastPath = new LastPath(request.getContextPath(), "/web/guest/workflow");
 					}
 				}
 	
@@ -112,6 +117,7 @@ public class CustomLoginPostAction extends Action {
 					// Redirect to User's Private Pages
 					lastPath = new LastPath(request.getContextPath(), "/web/guest/workflow");
 				}*/
+				
 			}
 
 			if(lastPath != null) {
